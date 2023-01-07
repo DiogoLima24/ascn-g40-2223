@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghost
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ghost
+  template:
+    metadata:
+      labels:
+        app: ghost
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: ghost-pool
+      containers:
+      - name: ghost
+        image: ghost:5.14.1
+        env:
+          - name: url
+            value: "http://ghost:2368"
+          - name: database__client
+            value: "mysql"
+          - name: database__connection__database
+            value: "ghost"
+          - name: database__connection__host
+            value: "database-service"
+          - name: database__connection__password
+            value: "123456"
+          - name: database__connection__user
+            value: "ghostuser"
+        ports:
+        - containerPort: 2368

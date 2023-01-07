@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: database-pool
+      containers:
+      - name: database
+        image: mysql:8
+        env:
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "true"
+        - name: MYSQL_DATABASE
+          value: "ghost"
+        - name: MYSQL_USER
+          value: "ghostuser"
+        - name: MYSQL_PASSWORD
+          value: "123456"
+        ports:
+        - containerPort: 3306
