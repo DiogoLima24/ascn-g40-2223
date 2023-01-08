@@ -1,0 +1,5 @@
+---
+
+- name: Print application URL
+  debug:
+    msg: "The application is available here: http://{{ service.info.status.loadBalancer.ingress[0].ip }}:2368"

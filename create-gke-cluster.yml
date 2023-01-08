@@ -8,3 +8,4 @@
       - gke_cluster_create
       - create_database
       - create_ghost
+      - provide_application_info
