@@ -2,9 +2,14 @@
   kubernetes.core.k8s:
     src: ghost-deployment.yml
     state: present
-  register: service-info
 
 - name: Create Ghost service
   kubernetes.core.k8s:
+    kind: Service
     src: ghost-service.yml
     state: present
+  register: result
+
+- name: Update the ghost_ip variable
+  ansible.builtin.set_fact:
+    ghost_ip: '{{ result.result.status.loadBalancer.ingress[0].ip }}'
