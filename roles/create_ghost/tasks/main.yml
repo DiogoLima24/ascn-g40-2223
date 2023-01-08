@@ -1,3 +1,7 @@
+- name: Wait for database to be created, do not skip
+  ansible.builtin.pause:
+    seconds: 120
+
 - name: Deploy Ghost
   kubernetes.core.k8s:
     src: ghost-deployment.yml
