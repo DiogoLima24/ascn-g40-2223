@@ -26,6 +26,6 @@ spec:
         - name: MYSQL_USER
           value: "ghostuser"
         - name: MYSQL_PASSWORD
-          value: "123456"
+          value: "alberto"
         ports:
         - containerPort: 3306

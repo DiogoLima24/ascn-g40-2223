@@ -2,6 +2,7 @@
   kubernetes.core.k8s:
     src: ghost-deployment.yml
     state: present
+  register: service-info
 
 - name: Create Ghost service
   kubernetes.core.k8s:

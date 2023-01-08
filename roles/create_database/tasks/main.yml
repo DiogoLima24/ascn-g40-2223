@@ -2,6 +2,11 @@
 - name: Deploy MySQL
   kubernetes.core.k8s:
     src: database-deployment.yml
+    wait: true
+    wait_condition:
+      type: Running
+      status: true
+    timeout: 30
     state: present
 
 - name: Create MySQL service
