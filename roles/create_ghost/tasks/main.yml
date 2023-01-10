@@ -1,19 +1,28 @@
-- name: Wait for database to be created, do not skip
-  ansible.builtin.pause:
-    seconds: 120
-
 - name: Deploy Ghost
   kubernetes.core.k8s:
     src: ghost-deployment.yml
     state: present
+  register: ghost
 
 - name: Create Ghost service
   kubernetes.core.k8s:
     kind: Service
     src: ghost-service.yml
     state: present
+
+- name: Wait for ghost to be created, do not skip
+  ansible.builtin.pause:
+    seconds: 120
+  when: ghost.changed
+
+- name: Get an existing Service object
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Service
+    name: ghost-service
+    namespace: default
   register: result
 
 - name: Update the ghost_ip variable
   ansible.builtin.set_fact:
-    ghost_ip: '{{ result.result.status.loadBalancer.ingress[0].ip }}'
+    ghost_ip: '{{ result.resources[0].status.loadBalancer.ingress[0].ip }}'

@@ -3,8 +3,26 @@
   kubernetes.core.k8s:
     src: database-deployment.yml
     state: present
+  register: database
 
 - name: Create MySQL service
   kubernetes.core.k8s:
     src: database-service.yml
     state: present
+
+- name: Wait for database to be created, do not skip
+  ansible.builtin.pause:
+    seconds: 120
+  when: database.changed
+
+- name: Get an existing Service object
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Service
+    name: database-service
+    namespace: default
+  register: result
+
+- name: Save database ip
+  ansible.builtin.set_fact:
+    database_ip: '{{ result.resources[0].status.loadBalancer.ingress[0].ip }}'

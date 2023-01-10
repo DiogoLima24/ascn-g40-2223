@@ -4,9 +4,10 @@ metadata:
   name: database-service
   namespace: default
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: database
   ports:
-    - targetPort: 3306
-      port: 3306
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306
