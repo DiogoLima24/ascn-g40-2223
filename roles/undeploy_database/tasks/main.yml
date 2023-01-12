@@ -1,7 +1,7 @@
 ---
 - name: Delete the MySQL deployment
     kubernetes.core.k8s:
-      name: database-deployment
+      name: database
       api_version: apps/v1
       kind: Deployment
       state: absent

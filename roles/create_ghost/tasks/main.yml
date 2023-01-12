@@ -27,7 +27,7 @@
   ansible.builtin.set_fact:
     ghost_ip: '{{ result.resources[0].status.loadBalancer.ingress[0].ip }}'
 
-- name: Set environment variable in a deployment
+- name: Update the ghost url environment variable
   kubernetes.core.k8s_json_patch:
     api_version: apps/v1
     kind: Deployment
