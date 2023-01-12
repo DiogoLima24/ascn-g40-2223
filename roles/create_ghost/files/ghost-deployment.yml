@@ -19,6 +19,8 @@ spec:
       - name: ghost
         image: ghost:5.14.1
         env:
+          - name: url
+            value: "localhost"
           - name: database__client
             value: "mysql"
           - name: database__connection__database

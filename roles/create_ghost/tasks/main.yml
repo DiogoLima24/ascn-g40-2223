@@ -26,3 +26,14 @@
 - name: Update the ghost_ip variable
   ansible.builtin.set_fact:
     ghost_ip: '{{ result.resources[0].status.loadBalancer.ingress[0].ip }}'
+
+- name: Set environment variable in a deployment
+  kubernetes.core.k8s_json_patch:
+    api_version: apps/v1
+    kind: Deployment
+    name: ghost
+    namespace: default
+    patch:
+      - op: replace
+        path: /spec/template/spec/containers/0/env/0/value
+        value: 'http://{{ ghost_ip }}:{{ ghost_port }}'
