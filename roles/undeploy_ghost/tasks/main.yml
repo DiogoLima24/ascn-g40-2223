@@ -1,14 +1,25 @@
 ---
+- name: Delete the Ghost service
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Service
+    name: ghost-service
+    namespace: default
+    state: absent
+
 - name: Delete the Ghost deployment
-    kubernetes.core.k8s:
-      name: ghost
-      api_version: apps/v1
-      kind: Deployment
-      state: absent
-  
-  - name: Delete the Ghost service
-    kubernetes.core.k8s:
-      name: ghost-service
-      api_version: v1
-      kind: Service
-      state: absent
+  kubernetes.core.k8s:
+    api_version: apps/v1
+    kind: Deployment
+    name: ghost
+    namespace: default
+    state: absent
+
+- name: Delete the Ghost pods
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Pod
+    namespace: default
+    label_selectors: 
+      - app = ghost
+    state: absent
