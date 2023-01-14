@@ -13,6 +13,24 @@
   retries: 3
   delay: 5
 
+- name: Authenticate (POST) with admin user credentials and it returns a status 201
+  ansible.builtin.uri:
+    url: "http://{{ ghost_ip }}:{{ghost_port}}/ghost/api/admin/session"
+    method: POST
+    status_code: 201
+    body_format: json
+    body:
+      username: '{{ admin_email }}'
+      password: '{{ admin_password }}'
+  register: result
+  until: result.status == 201
+  retries: 3
+  delay: 5
+
+- name: Save admin api session
+  ansible.builtin.set_fact:
+    session_cookies: "{{ result.cookies_string }}"
+
 - name: Get Content Api Key
   community.mysql.mysql_query:
     login_host: '{{ database_ip }}'
@@ -41,10 +59,30 @@
   assert:
     that: result.json.meta.pagination.total == 1
 
-
-- name: Get all authors through the Content Api
+- name: Create a Post
   ansible.builtin.uri:
-    url: "http://{{ ghost_ip }}:{{ghost_port}}/ghost/api/content/authors?key={{ content_api_key }}"
+    url: "http://{{ ghost_ip }}:{{ghost_port}}/ghost/api/admin/posts"
+    method: POST
+    status_code: 201
+    body_format: json
+    body:
+      posts:
+        - title: "My test post"
+          status: "published"
+    headers:
+      Cookie: "{{ session_cookies }}"
+  register: result
+  until: result.status == 201
+  retries: 3
+  delay: 5
+
+- name: Save created post url
+  ansible.builtin.set_fact:
+    post_location: '{{ result.location }}'
+
+- name: Get all posts through the Content Api
+  ansible.builtin.uri:
+    url: "http://{{ ghost_ip }}:{{ghost_port}}/ghost/api/content/posts?key={{ content_api_key }}"
     method: GET
     status_code: 200
   register: result
@@ -52,6 +90,32 @@
   retries: 3
   delay: 5
 
-- name: Verify that only one author exists
+- name: Ensure post was created
+  assert:
+    that: result.json.meta.pagination.total == 2
+
+- name: Delete a Post
+  ansible.builtin.uri:
+    url: "{{ post_location }}"
+    method: DELETE
+    status_code: 204
+    headers:
+      Cookie: "{{ session_cookies }}"
+  register: result  
+  until: result.status == 204
+  retries: 3
+  delay: 5
+
+- name: Get all posts through the Content Api
+  ansible.builtin.uri:
+    url: "http://{{ ghost_ip }}:{{ghost_port}}/ghost/api/content/posts?key={{ content_api_key }}"
+    method: GET
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 3
+  delay: 5
+
+- name: Ensure post was deleted
   assert:
     that: result.json.meta.pagination.total == 1
