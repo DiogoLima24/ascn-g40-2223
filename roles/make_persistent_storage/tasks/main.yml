@@ -1,7 +1,21 @@
 ---
+- name: Get NFS Server VM info
+  google.cloud.gcp_compute_instance:
+    name: nfs-server
+    zone: "{{ gcp_zone }}"
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_auth_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: nfs_server_info
+
+- name: Update the NFS Server internal IP variable
+  ansible.builtin.set_fact:
+    nfs_server_internal_ip: '{{ nfs_server_info.networkInterfaces[0].networkIP }}'
+
 - name: Create Persistent Volume
   kubernetes.core.k8s:
-    src: persistent-volume.yml
+    template: persistent-volume.j2
     state: present
 
 - name: Create Database Persistent Volume Claim

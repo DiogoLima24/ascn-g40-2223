@@ -20,5 +20,5 @@ spec:
   persistentVolumeReclaimPolicy: Recycle
   storageClassName: nfs-storage
   nfs:
-    server: 10.128.15.197
+    server: '{{ nfs_server_internal_ip }}'
     path: "/mnt/nfs-share"

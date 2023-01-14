@@ -32,22 +32,12 @@
       ssh-keys: 'ascn:{{ lookup("file", "~/.ssh/id_rsa.pub") }}'
   register: nfs_server_vm
 
-- name: Update the NFS Server Ip internal variable
-  ansible.builtin.set_fact:
-    nfs_server_internal_ip: '{{ nfs_server_vm.networkInterfaces[0].networkIP }}'
-
-- name: Change Persistent Volume file
-  lineinfile:
-   path: roles/make_persistent_storage/files/persistent-volume.yml
-   regexp: 'server: (\d+.?)+'
-   line: '    server: {{ nfs_server_internal_ip }}'
-
 - name: Create NFS Server host
   ansible.builtin.add_host:
     hostname: nfs_server_external_ip
     ansible_host: '{{ nfs_server_vm.networkInterfaces[0].accessConfigs[0].natIP }}'
 
-- name: Update the NFS Server Ip external variable
+- name: Update the NFS Server External IP variable
   ansible.builtin.set_fact:
     external_ip: '{{ nfs_server_vm.networkInterfaces[0].accessConfigs[0].natIP }}'
 
