@@ -1,0 +1,24 @@
+- name: Install NFS Server
+  package:
+    name: nfs-kernel-server
+    state: present
+  register: result
+  until: "result is not failed"
+  delay: 10
+  retries: 3
+
+- name: Create NFS folder
+  ansible.builtin.file:
+    path: /mnt/nfs-share
+    state: directory
+
+- name: Configure NFS Server
+  lineinfile:
+   path: /etc/exports
+   line: "/mnt/nfs-share *(rw,sync,no_root_squash)"
+   state: present
+
+- name: Start NFS server
+  service:
+    name: nfs-kernel-server
+    state: restarted
