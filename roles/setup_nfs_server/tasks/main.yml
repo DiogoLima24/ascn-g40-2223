@@ -1,11 +1,11 @@
+- name: Wait for target NFS server to become reachable/usable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
 - name: Install NFS Server
   package:
     name: nfs-kernel-server
     state: present
-  register: result
-  until: "result is not failed"
-  delay: 10
-  retries: 3
 
 - name: Create NFS folder
   ansible.builtin.file:

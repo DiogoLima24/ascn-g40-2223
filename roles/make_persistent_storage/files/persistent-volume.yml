@@ -20,5 +20,5 @@ spec:
   persistentVolumeReclaimPolicy: Recycle
   storageClassName: nfs-storage
   nfs:
-    server: 10.128.0.53
+    server: 10.128.15.197
     path: "/mnt/nfs-share"

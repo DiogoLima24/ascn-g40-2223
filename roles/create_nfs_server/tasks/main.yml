@@ -29,7 +29,7 @@
     service_account_file: "{{ gcp_cred_file }}"
     state: present
     metadata:
-      ssh-keys: 'ivo:{{ lookup("file", "~/.ssh/id_rsa.pub") }}'
+      ssh-keys: 'ascn:{{ lookup("file", "~/.ssh/id_rsa.pub") }}'
   register: nfs_server_vm
 
 - name: Update the NFS Server Ip internal variable
