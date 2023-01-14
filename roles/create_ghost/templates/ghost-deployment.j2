@@ -24,12 +24,12 @@ spec:
           - name: database__client
             value: "mysql"
           - name: database__connection__database
-            value: "ghost"
+            value: {{ database_name }}
           - name: database__connection__host
             value: "database-service"
           - name: database__connection__password
-            value: "alberto"
+            value: {{ database_password }}
           - name: database__connection__user
-            value: "ghostuser"
+            value: {{ database_user }}
         ports:
         - containerPort: {{ ghost_port }}

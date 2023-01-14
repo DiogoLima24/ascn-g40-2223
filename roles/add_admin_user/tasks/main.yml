@@ -5,7 +5,7 @@
     login_port: '{{ database_port }}'
     login_db: '{{ database_name }}'
     login_user: '{{ database_user }}'
-    login_password: "alberto"
+    login_password: '{{ database_password }}'
     query: "UPDATE users SET name='ascn', password='$2b$10$7JqSElSGtH.IiQsv/ANEZuXf206ll4hukcPAYFZN1Yn64730v4Q4.', email='{{ admin_email }}', status='active' WHERE id=1"
   register: result
   until: "result is not failed"
