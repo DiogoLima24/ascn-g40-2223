@@ -1,6 +1,12 @@
 ---
 # Playbook to destroy GKE cluster
 
+- name: Destroy NFS Server
+  hosts: localhost
+  gather_facts: false
+  roles:
+  - destroy_nfs_server
+
 - name: Destroy GKE cluster
   hosts: localhost
   gather_facts: false

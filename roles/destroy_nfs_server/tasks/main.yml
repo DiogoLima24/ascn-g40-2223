@@ -1,0 +1,21 @@
+- name: Delete NFS Server VM
+  google.cloud.gcp_compute_disk:
+    name: disk-instance
+    zone: "{{ gcp_zone }}"
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_auth_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: absent
+
+- name: Delete NFS Server disk
+  google.cloud.gcp_compute_disk:
+    name: nfs-server
+    zone: "{{ gcp_zone }}"
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_auth_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: absent
+  register: result
+  until: "result is not failed"
+  delay: 60
+  retries: 3

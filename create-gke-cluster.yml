@@ -1,5 +1,17 @@
 ---
 # Playbook to create GKE cluster
+- name: Create NFS Server
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - create_nfs_server
+
+- name: Setup NFS Server
+  hosts: nfs_server_external_ip
+  gather_facts: false
+  become: true
+  roles:
+    - setup_nfs_server
 
 - name: Create a GKE cluster
   hosts: localhost
