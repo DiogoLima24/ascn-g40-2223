@@ -5,6 +5,7 @@
   hosts: localhost
   gather_facts: false
   roles:
+      - make_persistent_storage
       - create_database
       - create_ghost
       - provide_application_info

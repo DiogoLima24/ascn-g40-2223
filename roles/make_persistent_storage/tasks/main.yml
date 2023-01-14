@@ -1,0 +1,10 @@
+---
+- name: Create Persistent Volume
+  kubernetes.core.k8s:
+    src: persistent-volume.yml
+    state: present
+
+- name: Create Database Persistent Volume Claim
+  kubernetes.core.k8s:
+    src: database-pv-claim.yml
+    state: present

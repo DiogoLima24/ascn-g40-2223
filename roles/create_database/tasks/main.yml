@@ -10,16 +10,6 @@
     src: database-service.yml
     state: present
 
-- name: Create PV
-  kubernetes.core.k8s:
-    src: persistent-volume.yml
-    state: present
-
-- name: Create PVC
-  kubernetes.core.k8s:
-    src: database-pv-claim.yml
-    state: present
-
 - name: Wait for database to be created, do not skip
   ansible.builtin.pause:
     seconds: 120
