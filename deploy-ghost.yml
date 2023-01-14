@@ -8,5 +8,5 @@
       - make_persistent_storage
       - create_database
       - create_ghost
-      - provide_application_info
       - add_admin_user
+      - provide_application_info
