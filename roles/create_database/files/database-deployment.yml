@@ -29,3 +29,10 @@ spec:
           value: "alberto"
         ports:
         - containerPort: 3306
+        volumeMounts:
+          - name: database-persistent-storage
+            mountPath: /var/lib/mysql
+      volumes:
+      - name: database-persistent-storage
+        persistentVolumeClaim:
+          claimName: database-pv-claim
