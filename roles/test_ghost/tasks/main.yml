@@ -5,10 +5,53 @@
 
 - name: Check that you can connect (GET) to Ghost and it returns a status 200
   ansible.builtin.uri:
-    url: "http://{{ ghost_ip }}:{{ghost_port}}/"
+    url: "http://{{ ghost_ip }}:{{ghost_port}}"
     method: GET
     status_code: 200
   register: result
   until: result.status == 200
   retries: 3
   delay: 5
+
+- name: Get Content Api Key
+  community.mysql.mysql_query:
+    login_host: '{{ database_ip }}'
+    login_port: '{{ database_port }}'
+    login_db: '{{ database_name }}'
+    login_user: '{{ database_user }}'
+    login_password: "alberto"
+    query: "SELECT secret FROM api_keys WHERE type='content'"
+  register: result
+
+- name: Save Content Api Key
+  ansible.builtin.set_fact:
+    content_api_key: '{{ result.query_result[0][0].secret }}'
+
+- name: Get all posts through the Content Api
+  ansible.builtin.uri:
+    url: "http://{{ ghost_ip }}:{{ghost_port}}/ghost/api/content/posts?key={{ content_api_key }}"
+    method: GET
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 3
+  delay: 5
+
+- name: Verify that only one post exists
+  assert:
+    that: result.json.meta.pagination.total == 1
+
+
+- name: Get all authors through the Content Api
+  ansible.builtin.uri:
+    url: "http://{{ ghost_ip }}:{{ghost_port}}/ghost/api/content/authors?key={{ content_api_key }}"
+    method: GET
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 3
+  delay: 5
+
+- name: Verify that only one author exists
+  assert:
+    that: result.json.meta.pagination.total == 1

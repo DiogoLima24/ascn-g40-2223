@@ -6,5 +6,5 @@
   roles: 
     - undeploy_database
     - undeploy_ghost
-    - undeploy_persistent_storage
-    - delete_data
+    - role: undeploy_persistent_storage
+      when: delete_data is defined and delete_data

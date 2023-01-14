@@ -2,11 +2,11 @@
 - name: Add Ghost Admin
   community.mysql.mysql_query:
     login_host: '{{ database_ip }}'
-    login_port: 3306
-    login_db: "ghost"
-    login_user: "ghostuser"
+    login_port: '{{ database_port }}'
+    login_db: '{{ database_name }}'
+    login_user: '{{ database_user }}'
     login_password: "alberto"
-    query: "UPDATE users SET name='ascn', password='$2b$10$7JqSElSGtH.IiQsv/ANEZuXf206ll4hukcPAYFZN1Yn64730v4Q4.', email='ascn@example.com', status='active' WHERE id=1"
+    query: "UPDATE users SET name='ascn', password='$2b$10$7JqSElSGtH.IiQsv/ANEZuXf206ll4hukcPAYFZN1Yn64730v4Q4.', email='{{ admin_email }}', status='active' WHERE id=1"
   register: result
   until: "result is not failed"
   delay: 60

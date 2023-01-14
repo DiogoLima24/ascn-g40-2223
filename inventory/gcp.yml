@@ -20,4 +20,8 @@ all:
 
 
   # Additional variables
-  # ...
+  database_name: ghost
+  database_user: ghostuser
+  database_port: 3306
+
+  admin_email: ascn@example.com

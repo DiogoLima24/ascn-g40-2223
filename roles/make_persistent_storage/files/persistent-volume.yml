@@ -20,7 +20,7 @@ spec:
     storage: 50Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Recycle
   storageClassName: local-storage
   hostPath:
     path: "/mnt/data"

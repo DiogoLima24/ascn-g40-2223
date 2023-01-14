@@ -1,19 +1,14 @@
 ---
 - name: Deploy MySQL
   kubernetes.core.k8s:
-    src: database-deployment.yml
+    template: database-deployment.j2
     state: present
   register: database
 
 - name: Create MySQL service
   kubernetes.core.k8s:
-    src: database-service.yml
+    template: database-service.j2
     state: present
-
-- name: Wait for database to be created, do not skip
-  ansible.builtin.pause:
-    seconds: 120
-  when: database.changed
 
 - name: Get an existing Service object
   kubernetes.core.k8s_info:
@@ -22,6 +17,9 @@
     name: database-service
     namespace: default
   register: result
+  until: "result.resources[0].status.loadBalancer.ingress is defined"
+  delay: 60
+  retries: 3
 
 - name: Save database ip
   ansible.builtin.set_fact:
